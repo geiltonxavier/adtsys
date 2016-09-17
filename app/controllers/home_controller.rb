@@ -1,21 +1,26 @@
 class HomeController < ApplicationController
   def index
-    #search the make
-    uri = URI("http://www.webmotors.com.br/carro/marcas")
+    render :index, locals: {
+      makes: find_all_makes
+    }
+  end
 
-    # Make request for Webmotors site
+  protected
+
+  def find_all_makes
+    uri = URI('http://www.webmotors.com.br/carro/marcas')
+
     response = Net::HTTP.post_form(uri, {})
     json = JSON.parse response.body
 
-    # Itera no resultado e grava as marcas que ainda não estão persistidas
-    json.each do |make_params|
-      if Make.where(name: make_params["Nome"]).size == 0
-        Make.create(name: make_params["Nome"], webmotors_id: make_params["Id"])
-      end
+    webmotors_makes = json.map { |h| [h['Nome'], h['Id']] }.to_h
+    found_makes = Make.where(name: webmotors_makes.keys).pluck(:name)
+    makes_to_import = webmotors_makes.keys - found_makes
+    insert_params = makes_to_import.map do |make, id|
+      { name: make, webmotors_id: id }
     end
+    ActiveRecord::Base.transaction { Make.create(insert_params) }
 
-    render :index, locals: {
-      makes: Make.all
-    }
+    Make.all
   end
 end

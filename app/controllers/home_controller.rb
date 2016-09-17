@@ -16,8 +16,8 @@ class HomeController < ApplicationController
     webmotors_makes = json.map { |h| [h['Nome'], h['Id']] }.to_h
     found_makes = Make.where(name: webmotors_makes.keys).pluck(:name)
     makes_to_import = webmotors_makes.keys - found_makes
-    insert_params = makes_to_import.map do |make, id|
-      { name: make, webmotors_id: id }
+    insert_params = makes_to_import.map do |make|
+      { name: make, webmotors_id: webmotors_makes[make] }
     end
     ActiveRecord::Base.transaction { Make.create(insert_params) }
 

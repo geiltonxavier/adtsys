@@ -2,7 +2,7 @@
   <p>
     <label>Escolha a Fabricante:</label>
 
-    <%= select_tag "webmotors_make_id", options_from_collection_for_select(makes, 'id', 'name') %>
+    <%= select_tag "webmotors_make_id", options_from_collection_for_select(makes, 'webmotors_id', 'name') %>
   </p>
 
   <input type="submit" value="Buscar modelos">

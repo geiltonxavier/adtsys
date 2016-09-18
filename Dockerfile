@@ -5,8 +5,8 @@ RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
 
 
 
-RUN mkdir -p /adtsys-applicants-test
-WORKDIR /adtsys-applicants-test
+RUN mkdir -p /adtsys
+WORKDIR /adtsys
 
 # Caching the gems
 COPY Gemfile Gemfile.lock ./

@@ -1,6 +1,6 @@
-<a href="/"><< Voltar</a>
-<ul>
+<%= link_to 'Voltar', root_path, class: "btn btn-primary" %>
+<ul class="list-group">
   <% @models.each do |model| %>
-    <li><%= model.name %></li>
+    <li class="list-group-item"><%= model.name %></li>
   <% end %>
 </ul>
